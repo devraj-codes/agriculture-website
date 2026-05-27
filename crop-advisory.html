@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crop Advisory — Agriculture Department of India</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="style.css" rel="stylesheet" />
+  <style>
+    .page-hero { background: linear-gradient(135deg,#1a4d2e,#2d7a4f); padding:52px 0 40px; color:white; }
+    .page-hero h1 { font-size:clamp(26px,5vw,40px); font-weight:600; }
+    .page-hero p  { font-size:15px; color:#c8e6c9; }
+
+    /* Selector box */
+    .selector-box { background:#f2f8f4; border:1px solid #c8e0c8; border-radius:14px; padding:28px; margin-bottom:36px; }
+    .selector-box h2 { font-size:18px; font-weight:600; color:#1a4d2e; margin-bottom:4px; }
+    .selector-box p  { font-size:13px; color:#5c7060; margin-bottom:20px; }
+    .selector-box label { font-size:12px; font-weight:600; color:#3a5c40; text-transform:uppercase; letter-spacing:.4px; display:block; margin-bottom:4px; }
+    .selector-box select {
+      border:1px solid #c8e0c8; border-radius:8px; padding:9px 12px;
+      font-size:13px; width:100%; background:#fff;
+    }
+    .selector-box select:focus { outline:none; border-color:#2d7a4f; }
+    .btn-get-advisory {
+      background:#1a4d2e; color:white; border:none; border-radius:8px;
+      padding:10px 28px; font-size:14px; font-weight:600; cursor:pointer;
+      transition:background .2s; width:100%;
+    }
+    .btn-get-advisory:hover { background:#2d7a4f; }
+
+    /* Advisory output */
+    .advisory-output { display:none; }
+    .advisory-output.show { display:block; }
+
+    .advisory-header { background:white; border:1px solid #d8e8d8; border-radius:14px; padding:20px 24px; margin-bottom:20px; display:flex; align-items:center; gap:16px; }
+    .advisory-crop-icon { font-size:40px; }
+    .advisory-crop-name { font-size:20px; font-weight:600; color:#1a4d2e; }
+    .advisory-crop-meta { font-size:13px; color:#5c7060; margin-top:2px; }
+
+    /* Info cards */
+    .info-card { background:white; border:1px solid #d8e8d8; border-radius:14px; padding:20px; height:100%; }
+    .info-card-title { font-size:13px; font-weight:600; color:#1a4d2e; text-transform:uppercase; letter-spacing:.5px; margin-bottom:14px; display:flex; align-items:center; gap:7px; }
+    .info-card-title i { font-size:16px; }
+    .info-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f0f5f0; font-size:13px; }
+    .info-row:last-child { border-bottom:none; }
+    .info-key { color:#5c7060; }
+    .info-val { font-weight:500; color:#1c2b1e; text-align:right; max-width:55%; }
+
+    /* Timeline */
+    .timeline { position:relative; padding-left:24px; }
+    .timeline::before { content:''; position:absolute; left:8px; top:0; bottom:0; width:2px; background:#d8e8d8; }
+    .tl-item { position:relative; padding-bottom:20px; }
+    .tl-item:last-child { padding-bottom:0; }
+    .tl-dot { position:absolute; left:-20px; top:3px; width:12px; height:12px; border-radius:50%; background:#2d7a4f; border:2px solid white; box-shadow:0 0 0 2px #2d7a4f; }
+    .tl-month { font-size:11px; font-weight:600; color:#2d7a4f; text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px; }
+    .tl-task  { font-size:13px; color:#1c2b1e; font-weight:500; }
+    .tl-desc  { font-size:12px; color:#5c7060; margin-top:2px; line-height:1.5; }
+
+    /* Pest alert */
+    .pest-alert { background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:14px 16px; margin-bottom:10px; }
+    .pest-name  { font-size:13px; font-weight:600; color:#e65100; margin-bottom:3px; }
+    .pest-desc  { font-size:12px; color:#5c7060; margin-bottom:6px; line-height:1.5; }
+    .pest-remedy{ font-size:12px; color:#1a4d2e; font-weight:500; }
+
+    /* Tips */
+    .tip-pill { background:#f2f8f4; border:1px solid #c8e0c8; border-radius:10px; padding:12px 14px; margin-bottom:10px; font-size:13px; color:#1c2b1e; display:flex; gap:10px; align-items:flex-start; line-height:1.55; }
+    .tip-pill i { color:#2d7a4f; font-size:16px; flex-shrink:0; margin-top:1px; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-nav sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <span class="emblem-circle">🌾</span>
+        <div><div class="brand-title">Agriculture Department</div><div class="brand-sub">Government of India</div></div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto gap-1">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="schemes.html">Schemes</a></li>
+          <li class="nav-item"><a class="nav-link active" href="crop-advisory.html">Crop Advisory</a></li>
+          <li class="nav-item"><a class="nav-link" href="weather.html">Weather</a></li>
+          <li class="nav-item"><a class="nav-link" href="mandi-prices.html">Mandi Prices</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <p style="font-size:12px;color:#a8d8b0;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Powered by ICAR &amp; State Agriculture Departments</p>
+      <h1>Crop Advisory Tool</h1>
+      <p>Select your crop, season, and state — get a personalised sowing guide, pest alerts, and fertilizer schedule.</p>
+    </div>
+  </section>
+
+  <div class="container py-5">
+
+    <!-- SELECTOR -->
+    <div class="selector-box">
+      <h2><i class="bi bi-sliders me-2"></i>Select Your Crop Details</h2>
+      <p>Fill in the details below to get your personalised crop advisory.</p>
+      <div class="row g-3 align-items-end">
+        <div class="col-12 col-md-3">
+          <label>Crop</label>
+          <select id="cropSel">
+            <option value="">Choose crop...</option>
+            <option value="wheat">🌾 Wheat</option>
+            <option value="rice">🍚 Rice</option>
+            <option value="cotton">🌿 Cotton</option>
+            <option value="tomato">🍅 Tomato</option>
+            <option value="onion">🧅 Onion</option>
+            <option value="soybean">🫘 Soybean</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label>Season</label>
+          <select id="seasonSel">
+            <option value="">Choose season...</option>
+            <option value="kharif">Kharif (Jun–Oct)</option>
+            <option value="rabi">Rabi (Nov–Mar)</option>
+            <option value="zaid">Zaid (Mar–Jun)</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label>State</label>
+          <select id="stateSel">
+            <option value="">Choose state...</option>
+            <option value="maharashtra">Maharashtra</option>
+            <option value="punjab">Punjab</option>
+            <option value="up">Uttar Pradesh</option>
+            <option value="mp">Madhya Pradesh</option>
+            <option value="karnataka">Karnataka</option>
+            <option value="rajasthan">Rajasthan</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <button class="btn-get-advisory" onclick="getAdvisory()">
+            <i class="bi bi-search me-2"></i>Get Advisory
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADVISORY OUTPUT (hidden until button clicked) -->
+    <div class="advisory-output" id="advisoryOutput">
+
+      <!-- Header -->
+      <div class="advisory-header">
+        <div class="advisory-crop-icon" id="outIcon"></div>
+        <div>
+          <div class="advisory-crop-name" id="outTitle"></div>
+          <div class="advisory-crop-meta" id="outMeta"></div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+
+        <!-- Crop info -->
+        <div class="col-12 col-lg-4">
+          <div class="info-card">
+            <div class="info-card-title"><i class="bi bi-info-circle"></i> Crop Overview</div>
+            <div id="cropInfo"></div>
+          </div>
+        </div>
+
+        <!-- Fertilizer schedule -->
+        <div class="col-12 col-lg-4">
+          <div class="info-card">
+            <div class="info-card-title"><i class="bi bi-droplet"></i> Fertilizer Schedule</div>
+            <div id="fertInfo"></div>
+          </div>
+        </div>
+
+        <!-- Water requirements -->
+        <div class="col-12 col-lg-4">
+          <div class="info-card">
+            <div class="info-card-title"><i class="bi bi-moisture"></i> Water Requirements</div>
+            <div id="waterInfo"></div>
+          </div>
+        </div>
+
+        <!-- Sowing timeline -->
+        <div class="col-12 col-lg-6">
+          <div class="info-card">
+            <div class="info-card-title"><i class="bi bi-calendar3"></i> Sowing &amp; Harvest Timeline</div>
+            <div class="timeline" id="timeline"></div>
+          </div>
+        </div>
+
+        <!-- Pest alerts -->
+        <div class="col-12 col-lg-6">
+          <div class="info-card">
+            <div class="info-card-title"><i class="bi bi-bug"></i> Common Pest &amp; Disease Alerts</div>
+            <div id="pestInfo"></div>
+          </div>
+        </div>
+
+        <!-- Best practices -->
+        <div class="col-12">
+          <div class="info-card">
+            <div class="info-card-title"><i class="bi bi-lightbulb"></i> Best Practices &amp; Tips</div>
+            <div class="row g-2" id="tipsInfo"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-12 col-md-4">
+          <div class="footer-brand">🌾 Agriculture Dept.</div>
+          <p class="footer-about">Ministry of Agriculture &amp; Farmers Welfare, Government of India.</p>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="footer-heading">Services</div>
+          <ul class="footer-links">
+            <li><a href="schemes.html">Schemes</a></li>
+            <li><a href="crop-advisory.html">Crop Advisory</a></li>
+            <li><a href="weather.html">Weather</a></li>
+            <li><a href="mandi-prices.html">Mandi Prices</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="footer-heading">Quick Links</div>
+          <ul class="footer-links">
+            <li><a href="#">pmkisan.gov.in</a></li>
+            <li><a href="#">enam.gov.in</a></li>
+            <li><a href="#">pmfby.gov.in</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="footer-heading">Kisan Helpline</div>
+          <div class="helpline-num"><i class="bi bi-telephone-fill me-2"></i>1800-180-1551</div>
+          <p class="footer-about mt-2">Toll-free · 6 AM – 10 PM · All languages</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Agriculture Department, Government of India</span>
+        <span>Advisory source: ICAR · State Agriculture Depts.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  const cropData = {
+    wheat: {
+      icon:'🌾', name:'Wheat', badge:'Rabi Crop',
+      info:[
+        {k:'Scientific name', v:'Triticum aestivum'},
+        {k:'Duration',        v:'120–150 days'},
+        {k:'Ideal temperature',v:'15–25°C'},
+        {k:'Ideal soil',      v:'Loamy / Clay loam'},
+        {k:'Avg. yield',      v:'40–50 qtl/hectare'},
+        {k:'MSP (2025–26)',   v:'₹2,425/qtl'},
+      ],
+      fert:[
+        {k:'Basal dose (at sowing)', v:'120 kg Urea + 155 kg DAP'},
+        {k:'First top dress (21 days)',v:'65 kg Urea'},
+        {k:'Second top dress (42 days)',v:'65 kg Urea'},
+        {k:'Zinc deficiency',        v:'Spray ZnSO₄ 0.5%'},
+      ],
+      water:[
+        {k:'Total irrigations',  v:'5–6 times'},
+        {k:'Crown root (21 days)',v:'Most critical'},
+        {k:'Tillering (45 days)',v:'Important'},
+        {k:'Grain filling',      v:'Essential'},
+        {k:'Total water needed', v:'350–450 mm'},
+      ],
+      timeline:[
+        {month:'November',   task:'Land preparation & sowing', desc:'Deep ploughing, seed treatment with fungicide. Sow at 100–125 kg/hectare.'},
+        {month:'December',   task:'First irrigation + top dressing', desc:'Apply first dose of urea after 21 days.'},
+        {month:'January',    task:'Weed control', desc:'Apply herbicide Isoproturon to control narrow-leaf weeds.'},
+        {month:'February',   task:'Second irrigation', desc:'Tillering stage — critical for yield formation.'},
+        {month:'March',      task:'Monitor for rust disease', desc:'Watch for yellow/brown rust. Spray Propiconazole if spotted.'},
+        {month:'April',      task:'Harvest', desc:'Harvest when grain moisture is below 14%. Use combine harvester.'},
+      ],
+      pests:[
+        {name:'Yellow Rust', desc:'Yellow stripes on leaves, spreads rapidly in cool humid weather.', remedy:'Remedy: Spray Propiconazole 25EC @ 0.1% at first sign.'},
+        {name:'Aphids',      desc:'Suck sap from leaves and ears. Appear in Feb–March.', remedy:'Remedy: Spray Dimethoate 30EC @ 1ml/litre water.'},
+        {name:'Loose Smut',  desc:'Entire ear turns into black powder. Seed-borne disease.', remedy:'Remedy: Seed treatment with Carboxin 75WP before sowing.'},
+      ],
+      tips:['Use certified seed varieties like HD-3086 or PBW-343 for best yield','Avoid waterlogging — ensure proper field drainage before sowing','Do soil testing before applying fertilizers to avoid over-application','Use drip or sprinkler irrigation to save 30% water compared to flood irrigation','Store harvested wheat at less than 12% moisture to prevent fungal damage'],
+    },
+    rice: {
+      icon:'🍚', name:'Rice', badge:'Kharif Crop',
+      info:[
+        {k:'Scientific name',  v:'Oryza sativa'},
+        {k:'Duration',         v:'90–150 days'},
+        {k:'Ideal temperature',v:'25–35°C'},
+        {k:'Ideal soil',       v:'Clay / Clay loam'},
+        {k:'Avg. yield',       v:'25–35 qtl/hectare'},
+        {k:'MSP (2025–26)',    v:'₹2,300/qtl'},
+      ],
+      fert:[
+        {k:'Basal dose',         v:'50 kg DAP + 60 kg MOP/ha'},
+        {k:'Top dress 1 (21 days)',v:'60 kg Urea/ha'},
+        {k:'Top dress 2 (45 days)',v:'60 kg Urea/ha'},
+        {k:'Zinc spray',         v:'ZnSO₄ 0.5% if deficient'},
+      ],
+      water:[
+        {k:'Nursery stage',     v:'Keep moist, not flooded'},
+        {k:'Transplanting',     v:'5 cm standing water'},
+        {k:'Tillering',         v:'2–5 cm standing water'},
+        {k:'Grain filling',     v:'Alternate wet & dry'},
+        {k:'Total water needed',v:'1200–2000 mm'},
+      ],
+      timeline:[
+        {month:'June',     task:'Nursery preparation', desc:'Prepare nursery beds, sow seeds. Nursery ready in 25–30 days.'},
+        {month:'July',     task:'Transplanting', desc:'Transplant seedlings at 20×15 cm spacing. 2–3 seedlings per hill.'},
+        {month:'August',   task:'Weed & pest management', desc:'Apply pre-emergence herbicide. Watch for stem borer.'},
+        {month:'September',task:'Top dressing', desc:'Apply second dose of urea at panicle initiation stage.'},
+        {month:'October',  task:'Drain field', desc:'Stop irrigation 10 days before harvest for easy harvesting.'},
+        {month:'November', task:'Harvest', desc:'Harvest at 80% grain maturity. Thresh and dry to 14% moisture.'},
+      ],
+      pests:[
+        {name:'Stem Borer',    desc:'Larvae bore into stem causing "dead heart" in vegetative stage.', remedy:'Remedy: Apply Chlorpyriphos granules @ 10 kg/ha at 30 DT.'},
+        {name:'Brown Plant Hopper', desc:'Hopper burn — circular brown patches in field.', remedy:'Remedy: Spray Imidacloprid 17.8SL @ 0.3ml/litre.'},
+        {name:'Blast Disease', desc:'Diamond-shaped lesions on leaves. Spreads in humid conditions.', remedy:'Remedy: Spray Tricyclazole 75WP @ 0.6g/litre water.'},
+      ],
+      tips:['Use short-duration varieties like Pusa Basmati 1509 to save water','System of Rice Intensification (SRI) can reduce water use by 40%','Maintain alternate wetting and drying after tillering stage','Do not burn paddy straw — incorporate into soil as organic matter','Avoid transplanting in waterlogged conditions to prevent root damage'],
+    },
+    cotton: {
+      icon:'🌿', name:'Cotton', badge:'Kharif Crop',
+      info:[
+        {k:'Scientific name',  v:'Gossypium hirsutum'},
+        {k:'Duration',         v:'150–180 days'},
+        {k:'Ideal temperature',v:'25–35°C'},
+        {k:'Ideal soil',       v:'Black cotton soil (Vertisol)'},
+        {k:'Avg. yield',       v:'15–20 qtl/hectare'},
+        {k:'MSP (2025–26)',    v:'₹7,121/qtl'},
+      ],
+      fert:[
+        {k:'Basal dose',          v:'62 kg DAP + 50 kg MOP/ha'},
+        {k:'Top dress 1 (30 days)',v:'65 kg Urea/ha'},
+        {k:'Top dress 2 (60 days)',v:'65 kg Urea/ha'},
+        {k:'Boron spray',         v:'0.2% at flowering stage'},
+      ],
+      water:[
+        {k:'Germination',       v:'Light irrigation only'},
+        {k:'Flowering (60 days)',v:'Critical — avoid stress'},
+        {k:'Boll development',  v:'Regular irrigation'},
+        {k:'Boll opening',      v:'Stop irrigation'},
+        {k:'Total water needed',v:'700–1200 mm'},
+      ],
+      timeline:[
+        {month:'May',      task:'Land preparation', desc:'Deep summer ploughing. Apply FYM @ 10 tonnes/ha.'},
+        {month:'June',     task:'Sowing', desc:'Sow after first monsoon rain. Spacing 90×60 cm for Bt cotton.'},
+        {month:'July',     task:'Gap filling & weeding', desc:'Fill gaps within 10 days. First weeding at 30 days.'},
+        {month:'August',   task:'Pest scouting', desc:'Monitor for pink bollworm and whitefly weekly.'},
+        {month:'September',task:'Flowering & boll set', desc:'Most critical period. Avoid water or nutrient stress.'},
+        {month:'Nov–Dec',  task:'Picking', desc:'Pick every 15 days. 3–4 pickings per season.'},
+      ],
+      pests:[
+        {name:'Pink Bollworm', desc:'Most damaging pest. Larvae feed on seeds inside bolls.', remedy:'Remedy: Use pheromone traps for monitoring. Spray Spinosad 45SC.'},
+        {name:'Whitefly',      desc:'Transmits leaf curl virus. Causes honeydew on leaves.', remedy:'Remedy: Spray Thiamethoxam 25WG @ 0.3g/litre water.'},
+        {name:'Leaf Curl Virus',desc:'Upward leaf curling, vein thickening. Spread by whitefly.', remedy:'Remedy: No cure — remove infected plants. Control whitefly.'},
+      ],
+      tips:['Use Bt cotton hybrids approved by the state for bollworm resistance','Pheromone traps @ 5/acre help monitor pink bollworm early','Avoid excessive nitrogen — causes vegetative growth at expense of bolls','Inter-cropping with green gram improves soil health and gives extra income','Pick cotton in dry weather to maintain quality and avoid price reduction'],
+    },
+    tomato: {
+      icon:'🍅', name:'Tomato', badge:'Horticulture Crop',
+      info:[
+        {k:'Scientific name',  v:'Solanum lycopersicum'},
+        {k:'Duration',         v:'60–90 days after transplant'},
+        {k:'Ideal temperature',v:'20–27°C'},
+        {k:'Ideal soil',       v:'Well-drained loamy soil'},
+        {k:'Avg. yield',       v:'250–400 qtl/hectare'},
+        {k:'Season',           v:'All year (protected also)'},
+      ],
+      fert:[
+        {k:'Basal dose',           v:'20T FYM + 150kg SSP + 50kg MOP'},
+        {k:'Top dress 1 (15 DAT)', v:'50 kg Urea/ha'},
+        {k:'Top dress 2 (30 DAT)', v:'50 kg Urea + 25 kg MOP'},
+        {k:'Foliar spray',         v:'0.5% KNO₃ at fruiting'},
+      ],
+      water:[
+        {k:'After transplanting', v:'Daily for 1 week'},
+        {k:'Vegetative stage',    v:'Every 5–7 days'},
+        {k:'Flowering stage',     v:'Every 3–4 days (critical)'},
+        {k:'Fruit development',   v:'Regular, avoid fluctuation'},
+        {k:'Best method',         v:'Drip irrigation'},
+      ],
+      timeline:[
+        {month:'Week 1–4',  task:'Nursery raising', desc:'Sow seeds in pro-trays or nursery beds. Transplant at 25–30 days.'},
+        {month:'Month 2',   task:'Transplanting & staking', desc:'Transplant at 60×45 cm. Stake plants to support growth.'},
+        {month:'Month 3',   task:'Pest & disease management', desc:'Watch for early blight and fruit borer.'},
+        {month:'Month 4',   task:'First harvest', desc:'Start picking when fruits turn red. Pick every 4–5 days.'},
+        {month:'Month 5–6', task:'Continue harvesting', desc:'Tomato gives 6–8 pickings. Remove old leaves periodically.'},
+      ],
+      pests:[
+        {name:'Fruit Borer (Helicoverpa)', desc:'Most serious pest. Larvae bore into fruits causing 30–40% loss.', remedy:'Remedy: Spray Spinosad 45SC or Chlorantraniliprole 18.5SC.'},
+        {name:'Early Blight',              desc:'Brown spots with concentric rings on older leaves.', remedy:'Remedy: Spray Mancozeb 75WP @ 2g/litre every 10 days.'},
+        {name:'Leaf Curl Virus',           desc:'Caused by whitefly. Upward curling, stunted plant.', remedy:'Remedy: Control whitefly with Imidacloprid. Remove infected plants.'},
+      ],
+      tips:['Use hybrid varieties like Arka Rakshak for high yield and disease resistance','Drip fertigation saves 40% water and improves fruit quality significantly','Mulching with black plastic film controls weeds and maintains soil moisture','Avoid overhead irrigation during flowering — causes blossom drop','Sell in nearby mandis or directly to processors for better price realisation'],
+    },
+    onion: {
+      icon:'🧅', name:'Onion', badge:'Horticulture Crop',
+      info:[
+        {k:'Scientific name',  v:'Allium cepa'},
+        {k:'Duration',         v:'90–120 days after transplant'},
+        {k:'Ideal temperature',v:'13–24°C'},
+        {k:'Ideal soil',       v:'Well-drained sandy loam'},
+        {k:'Avg. yield',       v:'200–300 qtl/hectare'},
+        {k:'Main states',      v:'Maharashtra, Karnataka, MP'},
+      ],
+      fert:[
+        {k:'Basal dose',          v:'25T FYM + 50kg DAP + 50kg MOP'},
+        {k:'Top dress 1 (30 DAT)',v:'75 kg Urea/ha'},
+        {k:'Top dress 2 (50 DAT)',v:'75 kg Urea + 25 kg MOP'},
+        {k:'Stop nitrogen',       v:'30 days before harvest'},
+      ],
+      water:[
+        {k:'After transplanting', v:'Light irrigation daily for 1 week'},
+        {k:'Bulb initiation',     v:'Critical — every 7–10 days'},
+        {k:'Bulb development',    v:'Regular irrigation'},
+        {k:'Before harvest',      v:'Stop irrigation 15 days prior'},
+        {k:'Total water needed',  v:'350–500 mm'},
+      ],
+      timeline:[
+        {month:'October',  task:'Nursery sowing (Rabi)', desc:'Sow seeds in nursery beds @ 8–10 kg seed/ha. Ready in 45 days.'},
+        {month:'November', task:'Transplanting', desc:'Transplant at 15×10 cm spacing. 2–3 lakh plants/hectare.'},
+        {month:'December', task:'Weed control', desc:'Hand weeding or apply Oxyfluorfen herbicide.'},
+        {month:'January',  task:'Bulb formation', desc:'Most critical period — ensure adequate irrigation and potash.'},
+        {month:'February', task:'Neck fall & maturity', desc:'When 50% necks fall, stop irrigation. Harvest after 10 days.'},
+        {month:'March',    task:'Harvesting & curing', desc:'Cure in shade for 7–10 days before storage or market.'},
+      ],
+      pests:[
+        {name:'Thrips',        desc:'Tiny insects cause silvery streaks on leaves. Most common pest.', remedy:'Remedy: Spray Fipronil 5SC @ 1ml/litre. Repeat every 10 days.'},
+        {name:'Purple Blotch', desc:'Purple lesions on leaves. Major fungal disease in humid weather.', remedy:'Remedy: Spray Iprovalicarb + Propineb @ 2g/litre water.'},
+        {name:'Basal Rot',     desc:'Roots rot at base. Plants yellow and collapse.', remedy:'Remedy: Drench with Carbendazim 50WP @ 1g/litre at transplanting.'},
+      ],
+      tips:['Lasalgaon and Pimpalgaon mandis (Nashik) give best prices for Maharashtra farmers','Curing onions for 7–10 days after harvest reduces storage losses by 60%','Use raised bed planting for better drainage and reduced basal rot','Avoid over-irrigation — causes neck rot and reduces storage life','Cold storage @ 0–2°C can preserve onions for 4–6 months'],
+    },
+    soybean: {
+      icon:'🫘', name:'Soybean', badge:'Kharif Oilseed Crop',
+      info:[
+        {k:'Scientific name',  v:'Glycine max'},
+        {k:'Duration',         v:'90–110 days'},
+        {k:'Ideal temperature',v:'26–30°C'},
+        {k:'Ideal soil',       v:'Well-drained black/loamy soil'},
+        {k:'Avg. yield',       v:'15–25 qtl/hectare'},
+        {k:'MSP (2025–26)',    v:'₹4,892/qtl'},
+      ],
+      fert:[
+        {k:'Basal dose',      v:'No nitrogen — fixes its own!'},
+        {k:'Phosphorus',      v:'155 kg SSP or 67 kg DAP/ha'},
+        {k:'Potassium',       v:'50 kg MOP/ha if soil is deficient'},
+        {k:'Rhizobium seed treatment', v:'5g per kg seed — must do!'},
+      ],
+      water:[
+        {k:'Germination',     v:'Pre-sowing irrigation if dry'},
+        {k:'Flowering (45 days)',v:'Critical — avoid stress'},
+        {k:'Pod filling',     v:'Most critical stage'},
+        {k:'Maturity',        v:'Stop irrigation at leaf yellowing'},
+        {k:'Total water needed',v:'450–700 mm'},
+      ],
+      timeline:[
+        {month:'June',     task:'Seed treatment & sowing', desc:'Treat with Rhizobium + Trichoderma. Sow after first good monsoon rain.'},
+        {month:'July',     task:'Weed management', desc:'Apply Imazethapyr 10SL @ 750ml/ha at 15–20 days after sowing.'},
+        {month:'August',   task:'Flowering & pod set', desc:'Critical period — ensure no water stress. Scout for girdle beetle.'},
+        {month:'September',task:'Pod filling', desc:'Spray potassium nitrate 0.5% to improve seed weight.'},
+        {month:'October',  task:'Harvest', desc:'Harvest when 95% leaves shed and pods are dry. Thresh carefully.'},
+      ],
+      pests:[
+        {name:'Girdle Beetle', desc:'Most serious soybean pest. Cuts stem girdle causing plant death.', remedy:'Remedy: Spray Chlorantraniliprole 18.5SC @ 0.4ml/litre at pod formation.'},
+        {name:'Leaf Eating Caterpillar', desc:'Defoliates entire crop in severe infestation.', remedy:'Remedy: Spray Quinalphos 25EC @ 2ml/litre when infestation is seen.'},
+        {name:'Yellow Mosaic Virus', desc:'Yellow patches on leaves. Spread by whitefly. No cure.', remedy:'Remedy: Control whitefly immediately. Remove infected plants.'},
+      ],
+      tips:['Rhizobium seed treatment is free from KVK — get it and never skip it','Soybean fixes atmospheric nitrogen — saves ₹3,000–4,000/ha in urea cost','Narrow row spacing (30 cm) gives 15% higher yield than traditional 45 cm','Indore and Ujjain mandis in MP consistently offer best soybean prices','Avoid late sowing — every week delay after July 10 reduces yield by 5%'],
+    },
+  };
+
+  function getAdvisory() {
+    const crop   = document.getElementById('cropSel').value;
+    const season = document.getElementById('seasonSel').value;
+    const state  = document.getElementById('stateSel').value;
+
+    if (!crop || !season || !state) {
+      alert('Please select Crop, Season, and State to get your advisory.');
+      return;
+    }
+
+    const d = cropData[crop];
+    const stateNames = { maharashtra:'Maharashtra', punjab:'Punjab', up:'Uttar Pradesh', mp:'Madhya Pradesh', karnataka:'Karnataka', rajasthan:'Rajasthan' };
+    const seasonNames = { kharif:'Kharif (Jun–Oct)', rabi:'Rabi (Nov–Mar)', zaid:'Zaid (Mar–Jun)' };
+
+    document.getElementById('outIcon').textContent  = d.icon;
+    document.getElementById('outTitle').textContent = d.name + ' Advisory';
+    document.getElementById('outMeta').textContent  = d.badge + ' · ' + seasonNames[season] + ' · ' + stateNames[state];
+
+    // Crop info
+    document.getElementById('cropInfo').innerHTML = d.info.map(r =>
+      `<div class="info-row"><span class="info-key">${r.k}</span><span class="info-val">${r.v}</span></div>`
+    ).join('');
+
+    // Fertilizer
+    document.getElementById('fertInfo').innerHTML = d.fert.map(r =>
+      `<div class="info-row"><span class="info-key">${r.k}</span><span class="info-val">${r.v}</span></div>`
+    ).join('');
+
+    // Water
+    document.getElementById('waterInfo').innerHTML = d.water.map(r =>
+      `<div class="info-row"><span class="info-key">${r.k}</span><span class="info-val">${r.v}</span></div>`
+    ).join('');
+
+    // Timeline
+    document.getElementById('timeline').innerHTML = d.timeline.map(t =>
+      `<div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-month">${t.month}</div>
+        <div class="tl-task">${t.task}</div>
+        <div class="tl-desc">${t.desc}</div>
+      </div>`
+    ).join('');
+
+    // Pests
+    document.getElementById('pestInfo').innerHTML = d.pests.map(p =>
+      `<div class="pest-alert">
+        <div class="pest-name">⚠️ ${p.name}</div>
+        <div class="pest-desc">${p.desc}</div>
+        <div class="pest-remedy">${p.remedy}</div>
+      </div>`
+    ).join('');
+
+    // Tips
+    document.getElementById('tipsInfo').innerHTML = d.tips.map(t =>
+      `<div class="col-12 col-md-6">
+        <div class="tip-pill"><i class="bi bi-check-circle-fill"></i>${t}</div>
+      </div>`
+    ).join('');
+
+    const out = document.getElementById('advisoryOutput');
+    out.classList.add('show');
+    out.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  </script>
+</body>
+</html>

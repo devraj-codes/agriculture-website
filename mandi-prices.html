@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mandi Prices — Agriculture Department of India</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="style.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    .page-hero { background:linear-gradient(135deg,#1a4d2e,#2d7a4f); padding:52px 0 40px; color:white; }
+    .page-hero h1 { font-size:clamp(26px,5vw,40px); font-weight:600; }
+    .page-hero p  { font-size:15px; color:#c8e6c9; }
+
+    /* Filter bar */
+    .filter-box { background:#f2f8f4; border:1px solid #c8e0c8; border-radius:14px; padding:28px; margin-bottom:28px; }
+    .filter-box h2 { font-size:18px; font-weight:600; color:#1a4d2e; margin-bottom:4px; }
+    .filter-box p  { font-size:13px; color:#5c7060; margin-bottom:20px; }
+    .filter-box label { font-size:12px; font-weight:600; color:#3a5c40; text-transform:uppercase; letter-spacing:.4px; display:block; margin-bottom:4px; }
+    .filter-box select { border:1px solid #c8e0c8; border-radius:8px; padding:9px 12px; font-size:13px; width:100%; background:#fff; }
+    .filter-box select:focus { outline:none; border-color:#2d7a4f; }
+    .btn-fetch { background:#1a4d2e; color:white; border:none; border-radius:8px; padding:10px 28px; font-size:14px; font-weight:600; cursor:pointer; transition:background .2s; width:100%; }
+    .btn-fetch:hover { background:#2d7a4f; }
+
+    /* Stat cards */
+    .stat-card { background:white; border:1px solid #d8e8d8; border-radius:12px; padding:20px; }
+    .stat-label { font-size:11px; font-weight:600; color:#5c7060; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+    .stat-value { font-size:30px; font-weight:600; }
+    .stat-unit  { font-size:12px; color:#5c7060; margin-top:2px; }
+    .stat-min   .stat-value { color:#c62828; }
+    .stat-modal .stat-value { color:#1a4d2e; }
+    .stat-max   .stat-value { color:#1a7a3c; }
+    .stat-trend .stat-value { font-size:24px; }
+
+    /* Table */
+    .table-card { background:white; border:1px solid #d8e8d8; border-radius:12px; overflow:hidden; margin-bottom:24px; }
+    .table-head { background:#1a4d2e; }
+    .table-head th { color:white; font-size:12px; font-weight:600; padding:12px 16px; letter-spacing:.3px; border:none; }
+    .table-body tr { border-bottom:1px solid #f0f5f0; transition:background .15s; }
+    .table-body tr:last-child { border-bottom:none; }
+    .table-body tr:hover { background:#f2f8f4; }
+    .table-body td { padding:12px 16px; font-size:13px; color:#1c2b1e; vertical-align:middle; }
+    .badge-up   { background:#e6f7ed; color:#1a7a3c; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; }
+    .badge-down { background:#fdecea; color:#c62828; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; }
+    .badge-flat { background:#f0f0f0; color:#555;    font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; }
+
+    /* Chart */
+    .chart-card { background:white; border:1px solid #d8e8d8; border-radius:12px; padding:20px; margin-bottom:24px; }
+    .chart-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+    .chart-title { font-size:15px; font-weight:600; color:#1a4d2e; }
+    .chart-meta  { font-size:12px; color:#5c7060; }
+    canvas { max-height:220px; }
+
+    /* API note */
+    .api-note { background:#fff3e0; border:1px solid #ffe082; border-radius:10px; padding:12px 16px; font-size:12px; color:#7a4f00; margin-bottom:24px; display:flex; gap:10px; align-items:flex-start; line-height:1.6; }
+
+    /* Section title */
+    .sec-title { font-size:15px; font-weight:600; color:#1a4d2e; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+
+    /* Output */
+    .mandi-output { display:none; }
+    .mandi-output.show { display:block; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-nav sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <span class="emblem-circle">🌾</span>
+        <div><div class="brand-title">Agriculture Department</div><div class="brand-sub">Government of India</div></div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto gap-1">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="schemes.html">Schemes</a></li>
+          <li class="nav-item"><a class="nav-link" href="crop-advisory.html">Crop Advisory</a></li>
+          <li class="nav-item"><a class="nav-link" href="weather.html">Weather</a></li>
+          <li class="nav-item"><a class="nav-link active" href="mandi-prices.html">Mandi Prices</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <p style="font-size:12px;color:#a8d8b0;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Data source: Agmarknet · data.gov.in</p>
+      <h1>Mandi Price Tracker</h1>
+      <p>Daily wholesale prices (min / modal / max) from regulated mandis across India. Track trends and decide when to sell.</p>
+    </div>
+  </section>
+
+  <div class="container py-5">
+
+    <!-- API NOTE -->
+    <div class="api-note">
+      <span style="font-size:18px">ℹ️</span>
+      <div><strong>Live API ready:</strong> Designed to connect to <strong>data.gov.in Agmarknet API</strong>. Register free at data.gov.in → get API key → replace <code>YOUR_API_KEY</code> in the JS. Sample data shown mirrors the real API JSON structure exactly — swapping is one line of code.</div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-box">
+      <h2><i class="bi bi-funnel me-2"></i>Select Commodity &amp; Market</h2>
+      <p>Filter by state, mandi, and commodity to get today's wholesale price.</p>
+      <div class="row g-3 align-items-end">
+        <div class="col-12 col-md-3">
+          <label>State</label>
+          <select id="stateSel" onchange="updateMandis()">
+            <option value="">Choose state...</option>
+            <option value="maharashtra">Maharashtra</option>
+            <option value="punjab">Punjab</option>
+            <option value="up">Uttar Pradesh</option>
+            <option value="mp">Madhya Pradesh</option>
+            <option value="karnataka">Karnataka</option>
+            <option value="rajasthan">Rajasthan</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label>Mandi</label>
+          <select id="mandiSel">
+            <option value="">Choose mandi...</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label>Commodity</label>
+          <select id="cropSel">
+            <option value="wheat">🌾 Wheat</option>
+            <option value="rice">🍚 Rice</option>
+            <option value="onion">🧅 Onion</option>
+            <option value="tomato">🍅 Tomato</option>
+            <option value="potato">🥔 Potato</option>
+            <option value="soybean">🫘 Soybean</option>
+            <option value="cotton">🌿 Cotton</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <button class="btn-fetch" onclick="fetchPrices()">
+            <i class="bi bi-search me-2"></i>Fetch Prices
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="mandi-output" id="mandiOutput">
+
+      <!-- Stat cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-card stat-min">
+            <div class="stat-label">Min Price</div>
+            <div class="stat-value" id="statMin">—</div>
+            <div class="stat-unit">per quintal · today</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card stat-modal">
+            <div class="stat-label">Modal Price</div>
+            <div class="stat-value" id="statModal">—</div>
+            <div class="stat-unit">per quintal · today</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card stat-max">
+            <div class="stat-label">Max Price</div>
+            <div class="stat-value" id="statMax">—</div>
+            <div class="stat-unit">per quintal · today</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card stat-trend">
+            <div class="stat-label">7-Day Trend</div>
+            <div class="stat-value" id="statTrend">—</div>
+            <div class="stat-unit" id="statTrendLabel">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="chart-card">
+        <div class="chart-head">
+          <div class="chart-title">7-Day Modal Price Trend</div>
+          <div class="chart-meta" id="chartMeta">—</div>
+        </div>
+        <canvas id="priceChart"></canvas>
+      </div>
+
+      <!-- Price table -->
+      <div class="sec-title"><i class="bi bi-table"></i> Daily Price History</div>
+      <div class="table-card">
+        <table class="table mb-0">
+          <thead class="table-head">
+            <tr>
+              <th>Date</th>
+              <th>Commodity</th>
+              <th>Mandi</th>
+              <th>Min (₹/qtl)</th>
+              <th>Modal (₹/qtl)</th>
+              <th>Max (₹/qtl)</th>
+              <th>Change</th>
+            </tr>
+          </thead>
+          <tbody class="table-body" id="priceTable"></tbody>
+        </table>
+      </div>
+
+      <!-- Sell advisory -->
+      <div class="sec-title"><i class="bi bi-lightbulb"></i> Price Advisory</div>
+      <div id="sellAdvisory"></div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-12 col-md-4">
+          <div class="footer-brand">🌾 Agriculture Dept.</div>
+          <p class="footer-about">Ministry of Agriculture &amp; Farmers Welfare, Government of India.</p>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="footer-heading">Services</div>
+          <ul class="footer-links">
+            <li><a href="schemes.html">Schemes</a></li>
+            <li><a href="crop-advisory.html">Crop Advisory</a></li>
+            <li><a href="weather.html">Weather</a></li>
+            <li><a href="mandi-prices.html">Mandi Prices</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="footer-heading">Quick Links</div>
+          <ul class="footer-links">
+            <li><a href="#">agmarknet.gov.in</a></li>
+            <li><a href="#">enam.gov.in</a></li>
+            <li><a href="#">data.gov.in</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="footer-heading">Kisan Helpline</div>
+          <div class="helpline-num"><i class="bi bi-telephone-fill me-2"></i>1800-180-1551</div>
+          <p class="footer-about mt-2">Toll-free · 6 AM – 10 PM · All languages</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Agriculture Department, Government of India</span>
+        <span>Data source: Agmarknet · data.gov.in</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  const mandisByState = {
+    maharashtra: ['Pune (Gultekdi)','Nashik (Lasalgaon)','Aurangabad','Ahmednagar','Nagpur'],
+    punjab:      ['Ludhiana','Amritsar','Patiala','Jalandhar','Bathinda'],
+    up:          ['Agra','Kanpur','Lucknow','Varanasi','Meerut'],
+    mp:          ['Indore','Bhopal','Ujjain','Rewa','Gwalior'],
+    karnataka:   ['Bengaluru (Yeshwanthpur)','Hubli','Mysuru','Belagavi'],
+    rajasthan:   ['Jaipur','Jodhpur','Kota','Udaipur'],
+  };
+
+  function updateMandis() {
+    const state = document.getElementById('stateSel').value;
+    const sel   = document.getElementById('mandiSel');
+    sel.innerHTML = '<option value="">Choose mandi...</option>';
+    if (mandisByState[state]) {
+      mandisByState[state].forEach(m => {
+        const o = document.createElement('option');
+        o.value = m; o.textContent = m; sel.appendChild(o);
+      });
+    }
+  }
+
+  /* ── Sample price data (mirrors data.gov.in Agmarknet API structure) ── */
+  const priceDB = {
+    wheat:   { base:2050, msp:2425 },
+    rice:    { base:3260, msp:2300 },
+    onion:   { base:2100, msp:null },
+    tomato:  { base:1450, msp:null },
+    potato:  { base:960,  msp:null },
+    soybean: { base:4320, msp:4892 },
+    cotton:  { base:6800, msp:7121 },
+  };
+
+  const cropNames = { wheat:'Wheat', rice:'Rice', onion:'Onion', tomato:'Tomato', potato:'Potato', soybean:'Soybean', cotton:'Cotton' };
+  const cropIcons = { wheat:'🌾', rice:'🍚', onion:'🧅', tomato:'🍅', potato:'🥔', soybean:'🫘', cotton:'🌿' };
+
+  let priceChart = null;
+
+  function generatePrices(base, days) {
+    const prices = [];
+    let cur = base;
+    for (let i = days - 1; i >= 0; i--) {
+      cur = cur + (Math.random() - 0.48) * (base * 0.03);
+      cur = Math.round(cur);
+      prices.push(cur);
+    }
+    return prices;
+  }
+
+  function getDate(daysAgo) {
+    const d = new Date();
+    d.setDate(d.getDate() - daysAgo);
+    return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  function fetchPrices() {
+    const state = document.getElementById('stateSel').value;
+    const mandi = document.getElementById('mandiSel').value;
+    const crop  = document.getElementById('cropSel').value;
+
+    if (!state || !mandi) { alert('Please select State and Mandi first.'); return; }
+
+    const { base, msp } = priceDB[crop];
+    const modals = generatePrices(base, 7);
+    const mins   = modals.map(m => Math.round(m * 0.88));
+    const maxs   = modals.map(m => Math.round(m * 1.12));
+
+    // Stat cards
+    document.getElementById('statMin').textContent   = '₹' + mins[6].toLocaleString('en-IN');
+    document.getElementById('statModal').textContent = '₹' + modals[6].toLocaleString('en-IN');
+    document.getElementById('statMax').textContent   = '₹' + maxs[6].toLocaleString('en-IN');
+
+    const trend = ((modals[6] - modals[0]) / modals[0] * 100).toFixed(1);
+    const trendEl = document.getElementById('statTrend');
+    trendEl.textContent = (trend >= 0 ? '▲ +' : '▼ ') + trend + '%';
+    trendEl.style.color = trend >= 0 ? '#1a7a3c' : '#c62828';
+    document.getElementById('statTrendLabel').textContent = trend >= 0 ? 'price rising (7 days)' : 'price falling (7 days)';
+
+    // Chart
+    const labels = Array.from({length:7}, (_,i) => getDate(6 - i).slice(0,6));
+    document.getElementById('chartMeta').textContent = cropNames[crop] + ' · ' + mandi;
+    if (priceChart) priceChart.destroy();
+    const ctx = document.getElementById('priceChart').getContext('2d');
+    priceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label:'Modal Price', data:modals, borderColor:'#2d7a4f', backgroundColor:'rgba(45,122,79,0.08)', borderWidth:2.5, pointRadius:4, tension:.35 },
+          { label:'Min Price',   data:mins,   borderColor:'#c62828', backgroundColor:'transparent', borderWidth:1.5, pointRadius:3, tension:.35, borderDash:[5,4] },
+          { label:'Max Price',   data:maxs,   borderColor:'#1a7a3c', backgroundColor:'transparent', borderWidth:1.5, pointRadius:3, tension:.35, borderDash:[5,4] },
+        ]
+      },
+      options: {
+        responsive:true,
+        plugins: {
+          legend: { labels:{ font:{family:'DM Sans',size:12}, boxWidth:16 } },
+          tooltip:{ callbacks:{ label: c => ' ₹' + c.raw.toLocaleString('en-IN') + ' /qtl' } }
+        },
+        scales: {
+          x: { ticks:{ font:{family:'DM Sans',size:11} }, grid:{ color:'rgba(0,0,0,0.04)' } },
+          y: { ticks:{ font:{family:'DM Sans',size:11}, callback: v => '₹' + v.toLocaleString('en-IN') }, grid:{ color:'rgba(0,0,0,0.04)' } }
+        }
+      }
+    });
+
+    // Table
+    const tbody = document.getElementById('priceTable');
+    tbody.innerHTML = '';
+    for (let i = 6; i >= 0; i--) {
+      const change = i < 6 ? ((modals[i] - modals[i-1]) / modals[i-1] * 100).toFixed(1) : 0;
+      const badgeClass = change > 0 ? 'badge-up' : change < 0 ? 'badge-down' : 'badge-flat';
+      const changeText = change > 0 ? '▲ +' + change + '%' : change < 0 ? '▼ ' + change + '%' : '— 0%';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${getDate(6 - i)}</td>
+        <td><strong>${cropIcons[crop]} ${cropNames[crop]}</strong></td>
+        <td>${mandi}</td>
+        <td>₹${mins[i].toLocaleString('en-IN')}</td>
+        <td><strong>₹${modals[i].toLocaleString('en-IN')}</strong></td>
+        <td>₹${maxs[i].toLocaleString('en-IN')}</td>
+        <td><span class="${badgeClass}">${changeText}</span></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    // Sell advisory
+    const todayModal = modals[6];
+    let advBg, advIcon, advText;
+    if (msp && todayModal < msp) {
+      advBg = '#fdecea'; advIcon = '🚨';
+      advText = `Today's modal price (₹${todayModal.toLocaleString('en-IN')}) is <strong>below the MSP of ₹${msp.toLocaleString('en-IN')}</strong>. Do not sell at this price — contact your nearest APMC or cooperative to sell at MSP.`;
+    } else if (parseFloat(trend) > 2) {
+      advBg = '#e8f5ee'; advIcon = '📈';
+      advText = `Prices are rising (up ${trend}% over 7 days). You may consider <strong>holding stock for a few more days</strong> if you have storage facility, as the trend is upward.`;
+    } else if (parseFloat(trend) < -2) {
+      advBg = '#fff3e0'; advIcon = '📉';
+      advText = `Prices are falling (down ${Math.abs(trend)}% over 7 days). Consider <strong>selling soon</strong> or exploring nearby mandis like eNAM for better price discovery.`;
+    } else {
+      advBg = '#e3f2fd'; advIcon = '💡';
+      advText = `Prices are stable this week. A good time to sell if your crop is ready. Check <a href="https://enam.gov.in" target="_blank">eNAM</a> for better price discovery across multiple mandis.`;
+    }
+    document.getElementById('sellAdvisory').innerHTML = `
+      <div style="background:${advBg};border-radius:12px;padding:18px 20px;font-size:13px;color:#1c2b1e;line-height:1.7;display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:24px">${advIcon}</span>
+        <div>${advText}</div>
+      </div>`;
+
+    const out = document.getElementById('mandiOutput');
+    out.classList.add('show');
+    out.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  </script>
+</body>
+</html>

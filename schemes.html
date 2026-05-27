@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Govt. Schemes — Agriculture Department of India</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="style.css" rel="stylesheet" />
+  <style>
+    .page-hero { background: linear-gradient(135deg,#1a4d2e,#2d7a4f); padding:52px 0 40px; color:white; }
+    .page-hero h1 { font-size:clamp(26px,5vw,40px); font-weight:600; }
+    .page-hero p  { font-size:15px; color:#c8e6c9; }
+
+    /* Eligibility checker */
+    .checker-box { background:#f2f8f4; border:1px solid #c8e0c8; border-radius:14px; padding:28px; margin-bottom:40px; }
+    .checker-box h2 { font-size:18px; font-weight:600; color:#1a4d2e; margin-bottom:4px; }
+    .checker-box p  { font-size:13px; color:#5c7060; margin-bottom:20px; }
+    .checker-box label { font-size:12px; font-weight:600; color:#3a5c40; text-transform:uppercase; letter-spacing:.4px; }
+    .checker-box select, .checker-box input {
+      border:1px solid #c8e0c8; border-radius:8px; padding:9px 12px;
+      font-size:13px; width:100%; background:#fff; margin-top:4px;
+    }
+    .checker-box select:focus, .checker-box input:focus { outline:none; border-color:#2d7a4f; }
+    .btn-check-eligibility {
+      background:#1a4d2e; color:white; border:none; border-radius:8px;
+      padding:10px 28px; font-size:14px; font-weight:600; cursor:pointer;
+      transition:background .2s;
+    }
+    .btn-check-eligibility:hover { background:#2d7a4f; }
+    .result-box { display:none; margin-top:20px; border-radius:10px; padding:16px 20px; }
+    .result-box.show { display:block; }
+    .result-box.matched { background:#e8f5ee; border:1px solid #97c459; }
+    .result-box.none    { background:#fff3e0; border:1px solid #f4c430; }
+
+    /* Scheme cards */
+    .scheme-card { background:white; border:1px solid #d8e8d8; border-radius:14px; padding:24px; height:100%; transition:transform .2s, box-shadow .2s; }
+    .scheme-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(26,77,46,.1); }
+    .scheme-badge { display:inline-block; font-size:11px; font-weight:600; padding:3px 10px; border-radius:20px; margin-bottom:12px; }
+    .badge-central { background:#e8f5ee; color:#1a4d2e; }
+    .badge-insurance{ background:#e3f2fd; color:#1565c0; }
+    .badge-credit   { background:#fff3e0; color:#e07b00; }
+    .badge-market   { background:#fce4ec; color:#c62828; }
+    .scheme-icon { font-size:28px; margin-bottom:12px; }
+    .scheme-title { font-size:16px; font-weight:600; color:#1c2b1e; margin-bottom:6px; }
+    .scheme-desc  { font-size:13px; color:#5c7060; line-height:1.65; margin-bottom:14px; }
+    .scheme-benefit { font-size:13px; font-weight:600; color:#1a4d2e; margin-bottom:12px; }
+    .scheme-tag { display:inline-block; font-size:11px; background:#f2f8f4; color:#3a5c40; border-radius:5px; padding:3px 8px; margin:2px; }
+    .btn-apply { display:inline-block; font-size:13px; font-weight:600; color:#2d7a4f; border:1.5px solid #2d7a4f; border-radius:7px; padding:7px 18px; text-decoration:none; transition:background .2s,color .2s; margin-top:14px; }
+    .btn-apply:hover { background:#2d7a4f; color:white; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR (same as index.html) -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-nav sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <span class="emblem-circle">🌾</span>
+        <div><div class="brand-title">Agriculture Department</div><div class="brand-sub">Government of India</div></div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto gap-1">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="schemes.html">Schemes</a></li>
+          <li class="nav-item"><a class="nav-link" href="crop-advisory.html">Crop Advisory</a></li>
+          <li class="nav-item"><a class="nav-link" href="weather.html">Weather</a></li>
+          <li class="nav-item"><a class="nav-link" href="mandi-prices.html">Mandi Prices</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <p style="font-size:12px;color:#a8d8b0;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Ministry of Agriculture &amp; Farmers Welfare</p>
+      <h1>Government Schemes &amp; Benefits</h1>
+      <p>All central government schemes for farmers — eligibility, benefits, and direct apply links.</p>
+    </div>
+  </section>
+
+  <div class="container py-5">
+
+    <!-- ELIGIBILITY CHECKER -->
+    <div class="checker-box">
+      <h2><i class="bi bi-patch-check me-2"></i>Check Your Eligibility</h2>
+      <p>Answer 4 quick questions to find out which schemes you qualify for.</p>
+      <div class="row g-3">
+        <div class="col-12 col-md-3">
+          <label>Land holding size</label>
+          <select id="land">
+            <option value="">Select...</option>
+            <option value="small">Less than 2 hectares (Small/Marginal)</option>
+            <option value="medium">2–5 hectares (Medium)</option>
+            <option value="large">More than 5 hectares (Large)</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label>Annual family income</label>
+          <select id="income">
+            <option value="">Select...</option>
+            <option value="low">Below ₹1.5 lakh</option>
+            <option value="mid">₹1.5–5 lakh</option>
+            <option value="high">Above ₹5 lakh</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label>Primary crop type</label>
+          <select id="crop">
+            <option value="">Select...</option>
+            <option value="food">Food grains (Wheat, Rice, Maize)</option>
+            <option value="cash">Cash crops (Cotton, Sugarcane)</option>
+            <option value="hort">Horticulture (Fruits, Vegetables)</option>
+            <option value="pulse">Pulses &amp; Oilseeds</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label>Registered on PM-KISAN?</label>
+          <select id="pmkisan">
+            <option value="">Select...</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-check-eligibility mt-3" onclick="checkEligibility()">
+        <i class="bi bi-search me-2"></i>Check Eligibility
+      </button>
+
+      <!-- Result -->
+      <div class="result-box" id="resultBox">
+        <div id="resultContent"></div>
+      </div>
+    </div>
+
+    <!-- SCHEME CARDS -->
+    <h2 style="font-size:20px;font-weight:600;color:#1a4d2e;margin-bottom:4px">All Schemes</h2>
+    <p style="font-size:13px;color:#5c7060;margin-bottom:24px">6 active central government schemes for farmers</p>
+
+    <div class="row g-4">
+
+      <!-- PM-KISAN -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="scheme-card">
+          <div class="scheme-icon">💰</div>
+          <span class="scheme-badge badge-central">Central Scheme</span>
+          <div class="scheme-title">PM-KISAN Samman Nidhi</div>
+          <div class="scheme-desc">Direct income support of ₹6,000 per year to all landholding farmer families, paid in 3 installments of ₹2,000 directly to bank accounts.</div>
+          <div class="scheme-benefit"><i class="bi bi-gift me-1"></i>Benefit: ₹6,000/year direct transfer</div>
+          <div>
+            <span class="scheme-tag">All farmers</span>
+            <span class="scheme-tag">Direct DBT</span>
+            <span class="scheme-tag">No income limit</span>
+          </div>
+          <a href="https://pmkisan.gov.in" target="_blank" class="btn-apply"><i class="bi bi-box-arrow-up-right me-1"></i>Apply on pmkisan.gov.in</a>
+        </div>
+      </div>
+
+      <!-- PM Fasal Bima -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="scheme-card">
+          <div class="scheme-icon">🛡️</div>
+          <span class="scheme-badge badge-insurance">Crop Insurance</span>
+          <div class="scheme-title">PM Fasal Bima Yojana</div>
+          <div class="scheme-desc">Comprehensive crop insurance against natural calamities, pests, and diseases. Farmers pay only 2% premium for Kharif, 1.5% for Rabi crops.</div>
+          <div class="scheme-benefit"><i class="bi bi-gift me-1"></i>Benefit: Full crop loss coverage</div>
+          <div>
+            <span class="scheme-tag">Kharif &amp; Rabi</span>
+            <span class="scheme-tag">Low premium</span>
+            <span class="scheme-tag">Natural calamities</span>
+          </div>
+          <a href="https://pmfby.gov.in" target="_blank" class="btn-apply"><i class="bi bi-box-arrow-up-right me-1"></i>Apply on pmfby.gov.in</a>
+        </div>
+      </div>
+
+      <!-- Kisan Credit Card -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="scheme-card">
+          <div class="scheme-icon">💳</div>
+          <span class="scheme-badge badge-credit">Credit Scheme</span>
+          <div class="scheme-title">Kisan Credit Card (KCC)</div>
+          <div class="scheme-desc">Provides farmers with timely credit for agricultural needs including crop cultivation, post-harvest expenses, and allied activities at 4% interest rate.</div>
+          <div class="scheme-benefit"><i class="bi bi-gift me-1"></i>Benefit: Credit up to ₹3 lakh @ 4% p.a.</div>
+          <div>
+            <span class="scheme-tag">Short-term credit</span>
+            <span class="scheme-tag">4% interest</span>
+            <span class="scheme-tag">All crops</span>
+          </div>
+          <a href="https://www.nabard.org" target="_blank" class="btn-apply"><i class="bi bi-box-arrow-up-right me-1"></i>Apply via Bank/NABARD</a>
+        </div>
+      </div>
+
+      <!-- eNAM -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="scheme-card">
+          <div class="scheme-icon">🏪</div>
+          <span class="scheme-badge badge-market">Market Scheme</span>
+          <div class="scheme-title">eNAM — National Market</div>
+          <div class="scheme-desc">Electronic national agriculture market connecting 1,000+ mandis online. Farmers can sell produce directly to buyers across India for better prices.</div>
+          <div class="scheme-benefit"><i class="bi bi-gift me-1"></i>Benefit: Better price discovery & direct sale</div>
+          <div>
+            <span class="scheme-tag">Online trading</span>
+            <span class="scheme-tag">1000+ mandis</span>
+            <span class="scheme-tag">Better prices</span>
+          </div>
+          <a href="https://enam.gov.in" target="_blank" class="btn-apply"><i class="bi bi-box-arrow-up-right me-1"></i>Register on enam.gov.in</a>
+        </div>
+      </div>
+
+      <!-- Soil Health Card -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="scheme-card">
+          <div class="scheme-icon">🧪</div>
+          <span class="scheme-badge badge-central">Central Scheme</span>
+          <div class="scheme-title">Soil Health Card Scheme</div>
+          <div class="scheme-desc">Free soil testing and personalized fertilizer recommendations for farmers. Helps reduce input costs and improve crop yield by using the right nutrients.</div>
+          <div class="scheme-benefit"><i class="bi bi-gift me-1"></i>Benefit: Free soil test + fertilizer advisory</div>
+          <div>
+            <span class="scheme-tag">Free testing</span>
+            <span class="scheme-tag">All farmers</span>
+            <span class="scheme-tag">Fertilizer advice</span>
+          </div>
+          <a href="https://soilhealth.dac.gov.in" target="_blank" class="btn-apply"><i class="bi bi-box-arrow-up-right me-1"></i>Check soilhealth.dac.gov.in</a>
+        </div>
+      </div>
+
+      <!-- Paramparagat Krishi -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="scheme-card">
+          <div class="scheme-icon">🌿</div>
+          <span class="scheme-badge badge-central">Central Scheme</span>
+          <div class="scheme-title">Paramparagat Krishi Vikas Yojana</div>
+          <div class="scheme-desc">Promotes organic farming through cluster-based approach. Farmers get financial assistance for organic certification, input production, and marketing.</div>
+          <div class="scheme-benefit"><i class="bi bi-gift me-1"></i>Benefit: ₹50,000/hectare over 3 years</div>
+          <div>
+            <span class="scheme-tag">Organic farming</span>
+            <span class="scheme-tag">Cluster-based</span>
+            <span class="scheme-tag">Certification support</span>
+          </div>
+          <a href="https://pgsindia-ncof.gov.in" target="_blank" class="btn-apply"><i class="bi bi-box-arrow-up-right me-1"></i>Visit pgsindia-ncof.gov.in</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-12 col-md-4">
+          <div class="footer-brand">🌾 Agriculture Dept.</div>
+          <p class="footer-about">Ministry of Agriculture &amp; Farmers Welfare, Government of India.</p>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="footer-heading">Services</div>
+          <ul class="footer-links">
+            <li><a href="schemes.html">Schemes</a></li>
+            <li><a href="crop-advisory.html">Crop Advisory</a></li>
+            <li><a href="weather.html">Weather</a></li>
+            <li><a href="mandi-prices.html">Mandi Prices</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="footer-heading">Quick Links</div>
+          <ul class="footer-links">
+            <li><a href="#">pmkisan.gov.in</a></li>
+            <li><a href="#">enam.gov.in</a></li>
+            <li><a href="#">pmfby.gov.in</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="footer-heading">Kisan Helpline</div>
+          <div class="helpline-num"><i class="bi bi-telephone-fill me-2"></i>1800-180-1551</div>
+          <p class="footer-about mt-2">Toll-free · 6 AM – 10 PM · All languages</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Agriculture Department, Government of India</span>
+        <span>Data source: Agmarknet · data.gov.in · IMD</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function checkEligibility() {
+      const land    = document.getElementById('land').value;
+      const income  = document.getElementById('income').value;
+      const crop    = document.getElementById('crop').value;
+      const pmkisan = document.getElementById('pmkisan').value;
+
+      if (!land || !income || !crop || !pmkisan) {
+        alert('Please answer all 4 questions before checking eligibility.');
+        return;
+      }
+
+      const matched = [];
+
+      // PM-KISAN — all farmers qualify
+      if (pmkisan === 'no') {
+        matched.push({ name:'PM-KISAN Samman Nidhi', benefit:'₹6,000/year direct to bank', link:'https://pmkisan.gov.in' });
+      }
+
+      // Fasal Bima — all farmers
+      matched.push({ name:'PM Fasal Bima Yojana', benefit:'Crop insurance at just 1.5–2% premium', link:'https://pmfby.gov.in' });
+
+      // KCC — small & medium farmers
+      if (land === 'small' || land === 'medium') {
+        matched.push({ name:'Kisan Credit Card (KCC)', benefit:'Credit up to ₹3 lakh at 4% interest', link:'https://www.nabard.org' });
+      }
+
+      // eNAM — all
+      matched.push({ name:'eNAM National Market', benefit:'Sell directly to buyers across India', link:'https://enam.gov.in' });
+
+      // Soil Health Card — all
+      matched.push({ name:'Soil Health Card Scheme', benefit:'Free soil testing + fertilizer advisory', link:'https://soilhealth.dac.gov.in' });
+
+      // PKVY — small farmers, food/pulse crops
+      if (land === 'small' && (crop === 'food' || crop === 'pulse')) {
+        matched.push({ name:'Paramparagat Krishi Vikas Yojana', benefit:'₹50,000/hectare over 3 years for organic farming', link:'https://pgsindia-ncof.gov.in' });
+      }
+
+      const box = document.getElementById('resultBox');
+      const content = document.getElementById('resultContent');
+      box.className = 'result-box show matched';
+      content.innerHTML = `
+        <div style="font-size:14px;font-weight:600;color:#1a4d2e;margin-bottom:12px">
+          ✅ You qualify for ${matched.length} scheme${matched.length > 1 ? 's' : ''}:
+        </div>
+        ${matched.map(s => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #c8e0c8;flex-wrap:wrap;gap:8px">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#1c2b1e">${s.name}</div>
+              <div style="font-size:12px;color:#5c7060">${s.benefit}</div>
+            </div>
+            <a href="${s.link}" target="_blank" style="font-size:12px;font-weight:600;color:#2d7a4f;text-decoration:none;border:1px solid #2d7a4f;border-radius:6px;padding:5px 12px;white-space:nowrap">
+              Apply now ↗
+            </a>
+          </div>
+        `).join('')}
+      `;
+      box.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    }
+  </script>
+</body>
+</html>

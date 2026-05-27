@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agriculture Department — Government of India</title>
+
+  <!-- Bootstrap 5 (loaded from CDN, no install needed) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <!-- Your custom styles -->
+  <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ============================================================
+       SECTION 1: NAVBAR
+       ============================================================ -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-nav sticky-top">
+    <div class="container">
+
+      <!-- Logo + Site name -->
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <span class="emblem-circle">🌾</span>
+        <div>
+          <div class="brand-title">Agriculture Department</div>
+          <div class="brand-sub">Government of India</div>
+        </div>
+      </a>
+
+      <!-- Hamburger button (shows on mobile) -->
+      <button class="navbar-toggler" type="button"
+              data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Nav links -->
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto gap-1">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="schemes.html">Schemes</a></li>
+          <li class="nav-item"><a class="nav-link" href="crop-advisory.html">Crop Advisory</a></li>
+          <li class="nav-item"><a class="nav-link" href="weather.html">Weather</a></li>
+          <li class="nav-item"><a class="nav-link" href="mandi-prices.html">Mandi Prices</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+  <!-- END NAVBAR -->
+
+
+  <!-- ============================================================
+       SECTION 2: HERO BANNER
+       ============================================================ -->
+  <section class="hero-section">
+    <div class="container text-center py-5">
+      <p class="hero-tag">Ministry of Agriculture &amp; Farmers Welfare</p>
+      <h1 class="hero-heading">Empowering India's <span class="hero-accent">Farmers</span></h1>
+      <p class="hero-sub">
+        Access government schemes, live mandi prices, crop advisory,<br class="d-none d-md-block">
+        and real-time weather — all in one place.
+      </p>
+      <div class="d-flex gap-3 justify-content-center flex-wrap mt-4">
+        <a href="schemes.html" class="btn btn-hero-primary">
+          <i class="bi bi-file-earmark-text me-2"></i>View Schemes
+        </a>
+        <a href="mandi-prices.html" class="btn btn-hero-outline">
+          <i class="bi bi-graph-up me-2"></i>Mandi Prices
+        </a>
+      </div>
+    </div>
+  </section>
+  <!-- END HERO -->
+
+
+  <!-- ============================================================
+       SECTION 3: MARQUEE — live mandi price ticker
+       ============================================================ -->
+  <div class="ticker-bar">
+    <span class="ticker-label">Live Prices</span>
+    <div class="ticker-track">
+      <span>🌾 Wheat (Pune): ₹2,050/qtl &nbsp;▲ 1.2%</span>
+      <span>🍅 Tomato (Nashik): ₹1,450/qtl &nbsp;▼ 2.1%</span>
+      <span>🧅 Onion (Lasalgaon): ₹2,100/qtl &nbsp;▲ 3.4%</span>
+      <span>🌾 Rice (Amritsar): ₹3,260/qtl &nbsp;▲ 0.8%</span>
+      <span>🥔 Potato (Agra): ₹960/qtl &nbsp;▼ 0.5%</span>
+      <span>🫘 Soybean (Indore): ₹4,320/qtl &nbsp;▲ 1.9%</span>
+    </div>
+  </div>
+  <!-- END TICKER -->
+
+
+  <!-- ============================================================
+       SECTION 4: QUICK-ACCESS FEATURE CARDS
+       ============================================================ -->
+  <section class="py-5 bg-light-green">
+    <div class="container">
+
+      <div class="text-center mb-4">
+        <h2 class="section-heading">Our Services</h2>
+        <p class="section-sub">Everything a farmer needs, in one portal</p>
+      </div>
+
+      <div class="row g-4">
+
+        <!-- Card 1: Schemes -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <a href="schemes.html" class="feature-card">
+            <div class="card-icon bg-icon-green">
+              <i class="bi bi-file-earmark-check"></i>
+            </div>
+            <h3 class="card-title">Govt. Schemes</h3>
+            <p class="card-desc">PM-KISAN, Kisan Credit Card, Fasal Bima Yojana and more — check eligibility &amp; apply.</p>
+            <span class="card-link">Explore schemes <i class="bi bi-arrow-right"></i></span>
+          </a>
+        </div>
+
+        <!-- Card 2: Crop Advisory -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <a href="crop-advisory.html" class="feature-card">
+            <div class="card-icon bg-icon-amber">
+              <i class="bi bi-tree"></i>
+            </div>
+            <h3 class="card-title">Crop Advisory</h3>
+            <p class="card-desc">Get sowing tips, pest alerts, and fertilizer schedules for your crop and region.</p>
+            <span class="card-link">Get advisory <i class="bi bi-arrow-right"></i></span>
+          </a>
+        </div>
+
+        <!-- Card 3: Weather -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <a href="weather.html" class="feature-card">
+            <div class="card-icon bg-icon-blue">
+              <i class="bi bi-cloud-rain"></i>
+            </div>
+            <h3 class="card-title">Weather</h3>
+            <p class="card-desc">7-day district-level forecast with rainfall data and farming impact notes.</p>
+            <span class="card-link">Check weather <i class="bi bi-arrow-right"></i></span>
+          </a>
+        </div>
+
+        <!-- Card 4: Mandi Prices -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <a href="mandi-prices.html" class="feature-card">
+            <div class="card-icon bg-icon-red">
+              <i class="bi bi-graph-up-arrow"></i>
+            </div>
+            <h3 class="card-title">Mandi Prices</h3>
+            <p class="card-desc">Daily wholesale prices from 4000+ mandis. Track trends and decide when to sell.</p>
+            <span class="card-link">View prices <i class="bi bi-arrow-right"></i></span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- END CARDS -->
+
+
+  <!-- ============================================================
+       SECTION 5: STATS BAR
+       ============================================================ -->
+  <section class="stats-bar">
+    <div class="container">
+      <div class="row text-center g-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-num">140M+</div>
+          <div class="stat-label">Farmers Registered</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-num">4,367</div>
+          <div class="stat-label">Mandis Connected</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-num">247</div>
+          <div class="stat-label">Commodities Tracked</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-num">₹2.4L Cr</div>
+          <div class="stat-label">Disbursed via PM-KISAN</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END STATS -->
+
+
+  <!-- ============================================================
+       SECTION 6: FOOTER
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4">
+
+        <div class="col-12 col-md-4">
+          <div class="footer-brand">🌾 Agriculture Dept.</div>
+          <p class="footer-about">
+            Ministry of Agriculture &amp; Farmers Welfare,<br>
+            Government of India. Committed to doubling farmer income.
+          </p>
+        </div>
+
+        <div class="col-6 col-md-2">
+          <div class="footer-heading">Services</div>
+          <ul class="footer-links">
+            <li><a href="schemes.html">Schemes</a></li>
+            <li><a href="crop-advisory.html">Crop Advisory</a></li>
+            <li><a href="weather.html">Weather</a></li>
+            <li><a href="mandi-prices.html">Mandi Prices</a></li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-md-2">
+          <div class="footer-heading">Quick Links</div>
+          <ul class="footer-links">
+            <li><a href="#">agmarknet.gov.in</a></li>
+            <li><a href="#">pmkisan.gov.in</a></li>
+            <li><a href="#">enam.gov.in</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="col-12 col-md-4">
+          <div class="footer-heading">Kisan Helpline</div>
+          <div class="helpline-num"><i class="bi bi-telephone-fill me-2"></i>1800-180-1551</div>
+          <p class="footer-about mt-2">Toll-free · Available 6 AM – 10 PM · All languages</p>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Agriculture Department, Government of India</span>
+        <span>Data source: Agmarknet · data.gov.in · IMD</span>
+      </div>
+    </div>
+  </footer>
+  <!-- END FOOTER -->
+
+
+  <!-- Bootstrap JS (needed for mobile navbar toggle) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
